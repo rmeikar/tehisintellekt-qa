@@ -13,7 +13,7 @@ Veebipõhine vestluse API, mis vastab küsimustele tehisintellekt.ee veebilehe s
 Muuda .env.example fail .env failiks
 
 Muuda .env failis OPENAI_API_KEY väärtust
-# OPENAI_API_KEY=your-actual-api-key-here
+OPENAI_API_KEY=your-actual-api-key-here
 
 ### 2. Käivitamine Dockeriga
 
