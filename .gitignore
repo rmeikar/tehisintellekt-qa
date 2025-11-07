@@ -1,0 +1,44 @@
+# Python runtime
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual Environment
+venv/
+env/
+
+# Testing
+.pytest_cache/
+htmlcov/
+.coverage
+
+# Environment
+.env
+
+# Logs
+*.log
+logs/
+*_log.txt
+build_log*.txt
+unittest_log.txt
+
+# Debug files
+crawler_debug.json
+page_source.js
+
+# Documentation (personal notes)
+*_ANALYSIS.md
+*_APPLIED.md
+*_REVIEW.md
+*_GUIDE.md
+*_CHECKLIST.md
+*_SUMMARY.md
+*_REFERENCE.md
+QUICKSTART.md
+SETUP.md
+
+# OS
+.DS_Store
+
+# Docker
+.dockerignore
