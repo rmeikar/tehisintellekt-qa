@@ -187,7 +187,7 @@ ContentIndexer on põhiline data pipeline - see crawlib veebilehte, eraldab puht
 ---
 
 
-ContentIndexer orkestreerib kolmefaasilist content processing pipeline'i:
+ContentIndexer orkestreerib kolmefaasilist sisu protsessimis pipeline'i:
 
 Crawling Phase: Süsteem alustab kogu veebilehe crawlimisega, kasutades HTTP päringuid kõigi lehtede toomiseks ja linkide ekstraktimiseks. Iga leht salvestatakse Page objektina, mis sisaldab selle URL-i ja raw HTML sisu.
 
