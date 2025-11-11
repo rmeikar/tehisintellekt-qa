@@ -178,7 +178,7 @@ pytest
 - `test_processor.py` - Päringute töötlemine
 - `test_app.py` - FastAPI endpoints
 
-**Täpsem kirjeldus:**
+### **Täpsem kirjeldus:**
 
 Rakendus kasutab startup-driven arhitektuuri, kus kogu sisu indekseerimine toimub üks kord FastAPI serveri käivitumisel. Lifespan context manager orkestreerib kolm kriitilist sammu: esiteks luuakse ContentIndexer OpenAI API võtmega, seejärel käivitatakse täielik saidi crawling ja indekseerimise protsess ning lõpuks initsialiseeritakse QueryProcessor, mis kasutab indekseeritud sisu.
 
