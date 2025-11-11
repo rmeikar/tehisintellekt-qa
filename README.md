@@ -177,3 +177,32 @@ pytest
 - `test_indexer.py` - Indekseerimine ja kokkuvõtete genereerimine
 - `test_processor.py` - Päringute töötlemine
 - `test_app.py` - FastAPI endpoints
+
+**Täpsem kirjeldus:**
+
+Rakendus kasutab startup-driven arhitektuuri, kus kogu sisu indekseerimine toimub üks kord FastAPI serveri käivitumisel. Lifespan context manager orkestreerib kolm kriitilist sammu: esiteks luuakse ContentIndexer OpenAI API võtmega, seejärel käivitatakse täielik saidi crawling ja indekseerimise protsess ning lõpuks initsialiseeritakse QueryProcessor, mis kasutab indekseeritud sisu.
+
+ContentIndexer on põhiline data pipeline - see crawlib veebilehte, eraldab puhta teksti HTML-ist ja genereerib struktureeritud kokkuvõtteid kasutades LLM-e. See loob kaks põhilist data store'i: summaries (kokkuvõtted lehtede valimiseks) ja full_content (täielik tekst vastuste genereerimiseks). QueryProcessor kasutab seejärel neid store'e, et intelligentselt valida asjakohaseid lehti ja genereerida kontekstitundlikke vastuseid, kui kasutajad esitavad küsimusi läbi API endpoint'ide.
+
+---
+
+
+ContentIndexer orkestreerib kolmefaasilist content processing pipeline'i:
+
+Crawling Phase: Süsteem alustab kogu veebilehe crawlimisega, kasutades HTTP päringuid kõigi lehtede toomiseks ja linkide ekstraktimiseks. Iga leht salvestatakse Page objektina, mis sisaldab selle URL-i ja raw HTML sisu.
+
+Content Extraction Phase: Toores HTML puhastatakse kasutades BeautifulSoupi, et eemaldada skriptid, stiilid ja navigatsioonielemendid. Ülejäänud tekst eraldatakse ja salvestatakse full_content dictionary'sse, säilitades täieliku loetava sisu hilisemaks päringu protsessimiseks.
+
+Summarization Phase: Iga lehe sisu saadetakse OpenAI GPT-4o-mini mudelile struktureeritud kokkuvõtete genereerimiseks. LLM eraldab teemad, võtmepunktid, potentsiaalsed küsimused ja loob põhjaliku kokkuvõtte. See struktureeritud metadata salvestatakse summaries dictionary'sse ja kasutatakse intelligentse lehtede valimise jaoks päringute ajal.
+
+Süsteem jälgib tokenite kasutust ja implementeerib error recovery retry loogikaga ebaõnnestunud API kutsete jaoks, tagades robustse töö isegi kui välised teenused on ebausaldusväärsed.
+
+---
+
+Kui kasutaja esitab küsimuse läbi FastAPI endpoint'i, järgib süsteem kolmeastmelist protsessi:
+
+Page Selection: QueryProcessor kasutab LLM-i, et analüüsida kõiki indekseeritud lehekülje kokkuvõtteid ja valida kõige asjakohasemad URL-id konkreetsele küsimusele vastamiseks. See tagab, et ainult asjakohast sisu arvestatakse.
+
+Context Building: Süsteem võtab valitud lehtedelt kogu teksti sisu ja konstrueerib põhjaliku konteksti stringi piirangute piires. See annab LLM-ile kogu vajaliku informatsiooni, austades samal ajal API piiranguid.
+
+Answer Generation: Kasutades tekitatud konteksti, genereerib LLM vastuse kasutaja küsimusele, tsiteerides milliseid allikaid vastuses tegelikult kasutati. Süsteem jälgib tokenite kasutust ja tagastab struktureeritud metadata koos vastusega.
